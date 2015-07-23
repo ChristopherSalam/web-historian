@@ -23,44 +23,66 @@ exports.initialize = function(pathsObj){
   });
 };
 
-var archSites = exports.paths.archivedSites + '/sites.txt';
+var archSites = exports.paths.list;
 
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(){
-	//1.
+	var urlList = [];
 	// loop through sites.txt
 	// have a container with all the url's.
-	fs.open(archSites, 'r',function(err, fd){
-		fs.readFile(archSites, function(err, data){
-			console.log('data inside readLIst', data.toString('utf-8'));
-		})
-	});
+	function processArrayData(err, data){
+		var results = data.toString('utf-8').replace(/\n/g," ").split(" "); 
+		urlList = results;
+	};
 
+	function results(){
+		fs.open(archSites, 'r',function(err, fd){
+			fs.readFile(archSites, function(err, data){
+				processArrayData(err,data);
+				fs.close(fd);
+				return urlList;
+			});
+		});
+	};
+	results();
+	// console.log('ur', urlList);
+	// return urlList;
 };
 
 exports.isUrlInList = function(url){
-	//2
 	// loop through list of url's.
 	// if url is in there, then return true;
+
+	// console.log('a',exports.readListOfUrls());
+	var arrayOfUrls = exports.readListOfUrls();
+	console.log('arrayOfUrls',arrayOfUrls);
+
+    // console.log("newURL",url.replace(/\//,""));
+    var cleanUrl = url.replace(/\//,"");
+    if (arrayOfUrls.indexOf(cleanUrl)) { 
+    	return true; 
+    }
+    return false;
 };
 
 exports.addUrlToList = function(url){
-    // else if isUrlArchived is true, then return HTML content of file( www.google.com)
-    
-	// if(exports.isUrlArchived()){
-	// 	// retrive file content
-	// }else{
+
+	var cleanUrl = url.replace(/\//,"");
+
+	// if isUrlInList true, then
+	if (exports.isUrlInList(cleanUrl)) { 
+		console.log('not here');
+	} else {
 		fs.open(exports.paths.list,'w',function(err, fd){
 			// console.log('data');
-			fs.write(fd, url,function(err, written ,buffer){
-				console.log('success');
+			fs.write(fd, cleanUrl, function(err, written ,buffer){
+				// console.log('success');
 				fs.close(fd);
 			});
 		});
-	// }
-
+	}
 	// create url file and add it to sites
     // var fd = fs.openSync(exports.paths.archivedSites+url,'w');
 
@@ -69,7 +91,7 @@ exports.addUrlToList = function(url){
 exports.isUrlArchived = function(url){
 	//loop through the sites directory
 	//and check if site page is present return true
-	fs.exists(exports.paths, callback)
+	// fs.exists(exports.paths, callback)
 };
 
 exports.downloadUrls = function(url){
