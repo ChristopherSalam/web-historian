@@ -24,7 +24,7 @@ exports.handleRequest = function (req, res) {
   			// if file requested doesn't exist, writeHead(404, ..);
   			var fullPath = archive.paths.archivedSites + req.url;
   			fs.exists(fullPath, function(exists){
-  				console.log('exists', exists);
+  				// console.log('exists', exists);
   				if(!exists){
   					res.writeHead(404, headers);
   					res.end();
@@ -53,10 +53,6 @@ exports.handleRequest = function (req, res) {
     		res.end();
     	});
 
-    	console.log('reading', fs.readFileSync(archive.path.list, 'utf8'));
-
-
-
     	// check if the url exists on sites.txt
     	// console.log('req' , req);
     	// check if file exists on archive/sites folder
@@ -67,5 +63,4 @@ exports.handleRequest = function (req, res) {
     	// if not, add URL  to  site.txt file
     	// create the file on archive/sites with returned information. 
     }
-
 };

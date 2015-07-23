@@ -48,8 +48,7 @@ describe("server", function() {
       });
     });
 
-    describe("POST", function () {
-      // this.timeout(15000);
+    xdescribe("POST", function () {
       it("should append submitted sites to 'sites.txt'", function(done) {
         var url = "www.example.com";
 
@@ -68,11 +67,12 @@ describe("server", function() {
             done(err);
           });
       });
+          // console.log("test");
     });
   });
 });
 
-xdescribe("archive helpers", function(){
+describe("archive helpers", function(){
   describe("#readListOfUrls", function () {
     it("should read urls from sites.txt", function (done){
       var urlArray = ["example1.com", "example2.com"];

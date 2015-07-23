@@ -27,42 +27,55 @@ var archSites = exports.paths.list;
 
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
-var urlList = [];
 
-exports.readListOfUrls = function(){
+exports.readListOfUrls = function(urlList, callback){
 	// loop through sites.txt
+var urlList = [];
 	// have a container with all the url's.
 	fs.open(archSites, 'r',function(err, fd){
+		// console.log("fsopen");
 		fs.readFile(archSites, function(err, data){
-			urlList = data.toString('utf-8').replace(/\n/g," ").split(" "); 
+			urlList.push(data.toString('utf-8')); 
+			// console.log("urlList - RLURL",urlList);
 			// urlList = results;
+			callback(urlList);
 			fs.close(fd);
 		});
 	});
 };
 
-exports.isUrlInList = function(url){
+exports.isUrlInList = function(url, callback){
 	// loop through list of url's.
 	// if url is in there, then return true;
-    // var cleanUrl = url.replace(/\//,"");
-    if( urlList.indexOf(url) === -1){
-    	return false;
-    }
-    return true;
+    exports.readListOfUrls(urlList, function(urlList){
+    	// console.log("isUrl inside readList");
+    	// console.log("url, urlList isURL",url, urlList);
+    	callback(urlList);
+    	if(urlList.indexOf(url+'\n') !== -1){
+    		//return true;
+    		return true;
+    	}
+		// console.log("urlList",urlList);
+		// console.log("url",url)
+		// console.log('here', callback(url));
+    	// return (urlList.indexOf(url) === -1);
+    });
 };
 
 exports.addUrlToList = function(url){
-	if (exports.isUrlInList(url)) { 
-		// console.log('in list');
-	} else {
-		fs.open(exports.paths.list,'r+',function(err, fd){
-			if(err){throw err;}
-			fs.writeFile(archSites, (url + '\n'), function(err){
+	exports.isUrlInList(url, function(urlList){
+		console.log(urlList,url);
+		if(urlList.indexOf(url + '\n') === -1){
+			fs.open(exports.paths.list,'r+',function(err, fd){
 				if(err){throw err;}
-				console.log('success');
+				fs.writeFile(archSites, (url + '\n'), function(err){
+					if(err){throw err;}
+				});
 			});
-		});
-	}
+		} 
+		//console.log('app');
+	});
+	// console.log("")
 };
 
 exports.isUrlArchived = function(url){
