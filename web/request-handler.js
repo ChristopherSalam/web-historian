@@ -44,8 +44,21 @@ exports.handleRequest = function (req, res) {
   			});
   		}
     } else if(req.method === 'POST'){
+    	// remember in chatterbox how you get the data.
+    	// .send() is sending data with post
+    	req.on('data', function(chunks){
+    		var urlOn = JSON.parse(chunks);
+    		archive.addUrlToList(urlOn['url']);
+    		res.writeHead(302, headers);
+    		res.end();
+    	});
+
+    	console.log('reading', fs.readFileSync(archive.path.list, 'utf8'));
+
+
+
     	// check if the url exists on sites.txt
-    	archive.addUrlToList(req.url);
+    	// console.log('req' , req);
     	// check if file exists on archive/sites folder
 
     	// if so, return archived HTML info
