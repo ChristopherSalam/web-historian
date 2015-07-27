@@ -1,6 +1,14 @@
 var path = require('path');
-var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
+var fs = require('fs');
+
+exports.headers = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "access-control-allow-headers": 'Content-Type, Authorization, Content-Length, X-Requested-With',
+  "access-control-max-age": 10, // Seconds.
+  'Content-Type': 'text/html'
+};
 
 exports.send = function(response, data, statusCode) {
   statusCode = statusCode || 200
